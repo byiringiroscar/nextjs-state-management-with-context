@@ -1,22 +1,13 @@
 import { useState, useMemo } from 'react';
+import { usePokemon } from '../src/store';
 import styles from '../styles/Home.module.css';
 import Image from 'next/image'
 import Head from 'next/head'
+export { getServerSideProps } from '../src/store';
 
 
-interface Pokemon {
-  id: number,
-  name: string,
-  image: string,
-}
-
-export default function Home({ pokemon }: { pokemon: Pokemon[] }) {
-  const [filter, setFilter] = useState("")
-  const filteredPokemon = useMemo(
-    () => pokemon.filter((p) => p.name.toLowerCase().includes(filter.toLowerCase())),
-    [ filter, pokemon ]
-  );
-
+export default function Home() {
+  const { pokemon, filter, setFilter } = usePokemon();
   return (
     <div className={styles.main}>
       <Head>
@@ -28,7 +19,7 @@ export default function Home({ pokemon }: { pokemon: Pokemon[] }) {
         <input type="text" placeholder="Search Pokemon" value={filter} className={styles.search} onChange={(e) => setFilter(e.target.value)} />
       </div>
       <div className={styles.container}>
-          {filteredPokemon.slice(0, 20).map((p) => (
+          {pokemon.slice(0, 20).map((p) => (
             <div key={p.id} className={styles.image}>
               <Image src={`https://jherr-pokemon.s3.us-west-1.amazonaws.com/${p.image}`} alt={p.name} height={100} width={100} />
               <h2>{p.name}</h2>
@@ -39,15 +30,4 @@ export default function Home({ pokemon }: { pokemon: Pokemon[] }) {
 
     </div>
   )
-}
-
-
-export const getServerSideProps = async() => {
-  const resp = await fetch("https://jherr-pokemon.s3.us-west-1.amazonaws.com/index.json");
-  const data = await resp.json();
-  return {
-    props: {
-      pokemon: data
-    }
-  }
 }
