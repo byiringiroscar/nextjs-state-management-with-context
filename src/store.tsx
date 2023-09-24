@@ -37,13 +37,13 @@ const PokemonContext = createContext<ReturnType<typeof usePokemonController>>({
     pokemon: []
     })
 
-    export const PokemonProvider: React.FC<{ pokemon: Pokemon[]; children: React.ReactNode }> = (
-      { pokemon, children }
-    ) => (
-      <PokemonContext.Provider value={usePokemonController(pokemon)}>
-        {children}
-      </PokemonContext.Provider>
-    );
+export const PokemonProvider: React.FC<{ pokemon: Pokemon[]; children: React.ReactNode }> = (
+  { pokemon, children }
+) => (
+  <PokemonContext.Provider value={usePokemonController(pokemon)}>
+    {children}
+  </PokemonContext.Provider>
+);
     
 
 export const usePokemon = () => useContext(PokemonContext);
